@@ -7,7 +7,7 @@
 "
 "=============================================================================
 
-if !has('pythonx') || &compatible
+if !has('python3') || &compatible
     finish
 endif
 
