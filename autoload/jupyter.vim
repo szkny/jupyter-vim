@@ -6,12 +6,14 @@
 "  Description: Autoload vim functions for use in jupyter-vim plugin
 "
 "=============================================================================
+scriptencoding utf-8
+
 "        Python Initialization: 
 "-----------------------------------------------------------------------------
 " See ~/.vim/bundle/jedi-vim/autoload/jedi.vim for initialization routine
 function! s:init_python() abort 
     let s:init_outcome = 0
-    let init_lines = [
+    let l:init_lines = [
           \ 'import vim',
           \ 'try:',
           \ '    import jupyter_vim',
@@ -23,7 +25,7 @@ function! s:init_python() abort
 
     " Try running lines via python, which will set script variable
     try
-        execute 'python3 exec('''.escape(join(init_lines, '\n'), "'").''')'
+        execute 'python3 exec('''.escape(join(l:init_lines, '\n'), "'").''')'
     catch
         throw printf('[jupyter-vim] s:init_python: failed to run Python for initialization: %s.', v:exception)
     endtry
@@ -68,7 +70,7 @@ endfunction
 function! jupyter#RunFile(...) abort 
     " filename is the last argument on the command line
     let l:flags = (a:0 > 1) ? join(a:000[:-2], ' ') : ''
-    let l:filename = a:0 ? a:000[-1] : expand("%:p")
+    let l:filename = a:0 ? a:000[-1] : expand('%:p')
     python3 jupyter_vim.run_file(flags=vim.eval('l:flags'),
                                \ filename=vim.eval('l:filename'))
 endfunction
@@ -88,17 +90,17 @@ endfunction
 
 function! jupyter#SendCount(count) abort 
     " TODO move this function to pure(ish) python like SendRange
-    let sel_save = &selection
-    let cb_save = &clipboard
-    let reg_save = @@
+    let l:sel_save = &selection
+    let l:cb_save = &clipboard
+    let l:reg_save = @@
     try
         set selection=inclusive clipboard-=unnamed clipboard-=unnamedplus
         silent execute 'normal! ' . a:count . 'yy'
         let l:cmd = @@
     finally
-        let @@ = reg_save
-        let &selection = sel_save
-        let &clipboard = cb_save
+        let @@ = l:reg_save
+        let &selection = l:sel_save
+        let &clipboard = l:cb_save
     endtry
     call jupyter#SendCode(l:cmd)
 endfunction
@@ -129,36 +131,36 @@ endfunction
 " rewrite this opfunc, just changing the line that handles 'l:cmd' every time.
 function! s:opfunc(type)
     " Originally from tpope/vim-scriptease
-    let sel_save = &selection
-    let cb_save = &clipboard
-    let reg_save = @@
-    let left_save = getpos("'<")
-    let right_save = getpos("'>")
-    let vimode_save = visualmode()
+    let l:sel_save = &selection
+    let l:cb_save = &clipboard
+    let l:reg_save = @@
+    let l:left_save = getpos("'<")
+    let l:right_save = getpos("'>")
+    let l:vimode_save = visualmode()
     try
         set selection=inclusive clipboard-=unnamed clipboard-=unnamedplus
-        if a:type =~ '^\d\+$'
+        if a:type =~# '^\d\+$'
             silent exe 'normal! ^v'.a:type.'$hy'
         elseif a:type =~# '^.$'
-            silent exe "normal! `<" . a:type . "`>y"
+            silent exe 'normal! `<' . a:type . '`>y'
         elseif a:type ==# 'line'
             silent exe "normal! '[V']y"
         elseif a:type ==# 'block'
             silent exe "normal! `[\<C-V>`]y"
         elseif a:type ==# 'visual'
-            silent exe "normal! gvy"
+            silent exe 'normal! gvy'
         else
-            silent exe "normal! `[v`]y"
+            silent exe 'normal! `[v`]y'
         endif
         redraw
         let l:cmd = @@
     finally
-        let @@ = reg_save
-        let &selection = sel_save
-        let &clipboard = cb_save
-        exe "normal! " . vimode_save . "\<Esc>"
-        call setpos("'<", left_save)
-        call setpos("'>", right_save)
+        let @@ = l:reg_save
+        let &selection = l:sel_save
+        let &clipboard = l:cb_save
+        exe 'normal! ' . l:vimode_save . "\<Esc>"
+        call setpos("'<", l:left_save)
+        call setpos("'>", l:right_save)
     endtry
     " Send the text to jupyter kernel
     call jupyter#SendCode(l:cmd)
@@ -176,16 +178,16 @@ function! jupyter#OpenJupyterTerm() abort
     " Set up console display window
     " If we're in the console display already, just go to the bottom.
     " Otherwise, create a new buffer in a split (or jump to it if open)
-    let term_buf = '__jupyter_term__'
-    if @% ==# term_buf
+    let l:term_buf = '__jupyter_term__'
+    if @% ==# l:term_buf
         normal! G
     else
         try
-            let save_swbuf=&switchbuf
+            let l:save_swbuf=&switchbuf
             set switchbuf=useopen
-            let l:cmd = bufnr(term_buf) > 0 ? 'sbuffer' : 'new'
-            execute l:cmd . ' ' . term_buf
-            let &switchbuf=save_swbuf
+            let l:cmd = bufnr(l:term_buf) > 0 ? 'sbuffer' : 'new'
+            execute l:cmd . ' ' . l:term_buf
+            let &switchbuf=l:save_swbuf
         catch
             return 0
         endtry
