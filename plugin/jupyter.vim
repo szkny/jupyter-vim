@@ -7,7 +7,7 @@
 "
 "=============================================================================
 
-if !has('pythonx') || &cp
+if !has('pythonx') || &compatible
     finish
 endif
 
@@ -15,11 +15,11 @@ endif
 "        Configuration: {{{
 "-----------------------------------------------------------------------------
 " TODO rewrite as dictionary w/ loop so it's easy to add more
-if !exists("g:jupyter_auto_connect")
+if !exists('g:jupyter_auto_connect')
     let g:jupyter_auto_connect = 0
 endif
 
-if !exists("g:jupyter_mapkeys")
+if !exists('g:jupyter_mapkeys')
     let g:jupyter_mapkeys = 1
 endif
 
