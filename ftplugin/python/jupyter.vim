@@ -7,7 +7,7 @@
 " Description: Vim integration with Jupyter [Qt]Console running ipython
 "=============================================================================
 
-if exists("b:loaded_jupyter")
+if exists('b:loaded_jupyter')
     finish
 endif
 
@@ -46,7 +46,6 @@ command! -buffer -nargs=0   PythonSetBreak  call jupyter#PythonDbstop()
 "}}}--------------------------------------------------------------------------
 "        Key Mappings: {{{
 "-----------------------------------------------------------------------------
-let g:jupyter_mapkeys = get(g:, 'jupyter_mapkeys', 0)
 if g:jupyter_mapkeys
     nnoremap <buffer> <silent> <localleader>R       :JupyterRunFile<CR>
     nnoremap <buffer> <silent> <localleader>I       :JupyterImportThisFile<CR>

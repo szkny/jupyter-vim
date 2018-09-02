@@ -20,7 +20,7 @@ if !exists('g:jupyter_auto_connect')
 endif
 
 if !exists('g:jupyter_mapkeys')
-    let g:jupyter_mapkeys = 1
+    let g:jupyter_mapkeys = 0
 endif
 
 " Debugging flags:
