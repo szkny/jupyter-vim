@@ -36,7 +36,9 @@ except ImportError:
     raise ImportError("Could not find kernel. " + _install_instructions)
 
 try:
-    import vim
+    from neovim import Nvim
+    from neovim.msgpack_rpc import stdio_session
+    vim = Nvim.from_session(stdio_session())
 except ImportError:
     raise ImportError('vim module only available within vim!')
 

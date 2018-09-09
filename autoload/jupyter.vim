@@ -14,9 +14,8 @@ scriptencoding utf-8
 function! s:init_python() abort 
     let s:init_outcome = 0
     let l:init_lines = [
-          \ 'import vim',
           \ 'try:',
-          \ '    import jupyter_vim',
+          \ '    from jupyter_vim import jupyter_vim',
           \ 'except Exception as exc:',
           \ '    vim.command(''let s:init_outcome = "could not import jupyter_vim:'
           \                    .'{0}: {1}"''.format(exc.__class__.__name__, exc))',
@@ -41,7 +40,7 @@ endfunction
 
 " Public initialization routine
 let s:_init_python = -1
-function! jupyter#init_python() abort 
+function! jupyter#init_python() abort
     if s:_init_python == -1
         try
             let s:_init_python = s:init_python()
